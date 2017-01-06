@@ -1,7 +1,7 @@
 #Import required library
 import pandas
 import matplotlib.pyplot as plt
-from sklearn.model_selection import cross_val_predict
+#from sklearn.model_selection import cross_val_predict
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -18,7 +18,7 @@ movies = movies[movies["gross"] > 0]
 movies = movies.dropna(axis=0)
 
 #find correlation
-print movies.corr()["gross"]
+#print movies.corr()["gross"]
 
 #Get all the columns from the dataframe.
 columns = movies.columns.tolist()
