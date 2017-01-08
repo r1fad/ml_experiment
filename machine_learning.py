@@ -1,12 +1,13 @@
 #Import required library
 import pandas
 import matplotlib.pyplot as plt
-#from sklearn.model_selection import cross_val_predict
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import SGDRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn import preprocessing
+
+#scaler = preprocessing.StandardScaler()
+scaler = preprocessing.MinMaxScaler()
 
 #Read in the data.
 movies = pandas.read_csv("movie_metadata.csv")
@@ -46,4 +47,9 @@ predictions = model.predict(test[columns])
 
 # Compute error between our test predictions and the actual values.
 print mean_squared_error(predictions, test[target])
+
+plt.scatter(test[target].values, predictions)
+plt.xlabel("Actual")
+plt.ylabel("Predicted")
+plt.show()
 
