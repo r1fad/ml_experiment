@@ -1,40 +1,42 @@
+'''
+The dataset contains information about video games
+I use the critic score and North American sales and European Sales to predict Global Sales
+'''
+
 #Import required library
 import pandas
 import matplotlib.pyplot as plt
+import pickle
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-from sklearn import preprocessing
-
-#scaler = preprocessing.StandardScaler()
-scaler = preprocessing.MinMaxScaler()
 
 #Read in the data.
-movies = pandas.read_csv("movie_metadata.csv")
+video_games = pandas.read_csv("video_games.csv")
 
 # Remove any rows without gross
-movies = movies[movies["gross"] > 0]
+video_games = video_games[video_games["Global_Sales"] > 0]
 
 # Remove any rows with missing values.
-movies = movies.dropna(axis=0)
+video_games = video_games.dropna(axis=0)
 
 #find correlation
-#print movies.corr()["gross"]
+#print video_games.corr()["Global_Sales"]
 
 #Get all the columns from the dataframe.
-columns = movies.columns.tolist()
+columns = video_games.columns.tolist()
 
 # Filter the columns to remove ones we don't want.
-columns = [c for c in columns if c in ["num_voted_users", "num_user_for_reviews", "num_critic_for_reviews"]]
+columns = [c for c in columns if c in ["Critic_Score","NA_Sales","EU_Sales"]]
 
 # Store the variable we'll be predicting on.
-target = "gross"
+target = "Global_Sales"
 
 # Generate the training set.  Set random_state to be able to replicate results.
-train = movies.sample(frac=0.8, random_state=1)
+train = video_games.sample(frac=0.8, random_state=1)
 
 # Select anything not in the training set and put it in the testing set.
-test = movies.loc[~movies.index.isin(train.index)]
+test = video_games.loc[~video_games.index.isin(train.index)]
 
 # Initialize the model class.
 model = LinearRegression()
@@ -48,8 +50,6 @@ predictions = model.predict(test[columns])
 # Compute error between our test predictions and the actual values.
 print mean_squared_error(predictions, test[target])
 
-plt.scatter(test[target].values, predictions)
-plt.xlabel("Actual")
-plt.ylabel("Predicted")
-plt.show()
-
+#save model
+filename = 'LinearRegressorModel(video_games)'
+pickle.dump(model, open(filename,'wb'))
